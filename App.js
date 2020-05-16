@@ -5,7 +5,7 @@ import RootNavigation from './navigation/rootNavigation';
 function App() {
   return (
     <>
-      <StatusBar barStyle="light-content" />
+      <StatusBar barStyle="light-content" backgroundColor="#140A26"/>
       <RootNavigation />
     </>
   );

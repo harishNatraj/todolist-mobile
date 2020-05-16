@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import {FlatList} from 'react-native-gesture-handler';
 import CalendarComponent from '../Components/Calendar';

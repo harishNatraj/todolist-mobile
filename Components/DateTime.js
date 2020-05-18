@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Platform,
@@ -10,10 +10,18 @@ import {
 import DateTimePicker from '@react-native-community/datetimepicker';
 import {BlurView} from '@react-native-community/blur';
 import {vs, s} from 'react-native-size-matters';
+const axios = require('axios');
 
 const iOS = Platform.OS === 'ios';
 
-const DatePickerIos = ({showDateTime, hide}) => {
+const DatePickerIos = ({showDateTime, hide, onChange}) => {
+  const [date, setDate] = useState(new Date());
+
+  const handleDateChange = (e, selectedDate) => {
+    const currentDate = selectedDate;
+    setDate(currentDate);
+    onChange(currentDate);
+  };
   return (
     <Modal visible={showDateTime}>
       <View style={styles.dateTimePickerContainer}>
@@ -27,13 +35,11 @@ const DatePickerIos = ({showDateTime, hide}) => {
           <DateTimePicker
             testID="dateTimePicker"
             timeZoneOffsetInMinutes={0}
-            value={new Date()}
             mode="datetime"
+            value={date}
             is24Hour={true}
             display="default"
-            onChange={(ev, date) => {
-              console.log(date);
-            }}
+            onChange={handleDateChange}
           />
           <View
             style={{
@@ -71,7 +77,7 @@ const DatePickerIos = ({showDateTime, hide}) => {
   );
 };
 
-const DatePickerAndroid = ({showDateTime, hide}) => {
+const DatePickerAndroid = ({showDateTime, hide, onChange}) => {
   if (!showDateTime) {
     return null;
   }
@@ -84,18 +90,26 @@ const DatePickerAndroid = ({showDateTime, hide}) => {
       is24Hour={true}
       display="default"
       onChange={(ev, date) => {
-        console.log(date);
+        onChange(date);
         hide();
       }}
     />
   );
 };
 
-const DateTime = ({showDateTime, hide}) => {
+const DateTime = ({showDateTime, hide, onChange}) => {
   return iOS ? (
-    <DatePickerIos showDateTime={showDateTime} hide={hide} />
+    <DatePickerIos
+      showDateTime={showDateTime}
+      hide={hide}
+      onChange={onChange}
+    />
   ) : (
-    <DatePickerAndroid showDateTime={showDateTime} hide={hide} />
+    <DatePickerAndroid
+      showDateTime={showDateTime}
+      hide={hide}
+      onChange={onChange}
+    />
   );
 };
 

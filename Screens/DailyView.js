@@ -10,11 +10,8 @@ import {
 import DetailsPage from '../Components/DetailsPage';
 import {s, vs} from 'react-native-size-matters';
 import Swipeout from 'react-native-swipeout';
-
-const tasks = new Array(10).fill({
-  task: 'This is a task',
-  time: '2nd Feb . 12 pm',
-});
+import axios from 'axios';
+import moment from 'moment';
 
 var swipeoutBtns = [
   {
@@ -22,8 +19,20 @@ var swipeoutBtns = [
   },
 ];
 const DailyView = () => {
-  const [isModalShown, setIsModalShown] = useState(false);
+  const [isModalShown, setIsModalShown] = useState(null);
+  const [tasks, setTasks] = useState([]);
 
+  axios
+    .get('http://localhost:8080/tasks?today=true')
+    .then(function(response) {
+      if (Array.isArray(response.data.tasks)) {
+        setTasks(response.data.tasks);
+      }
+    })
+    .catch(function(error) {
+      // handle error
+      console.log(error);
+    });
   return (
     <>
       <FlatList
@@ -38,14 +47,16 @@ const DailyView = () => {
         keyExtractor={(item, index) => `${index}00`}
         renderItem={({item, index}) => (
           <Swipeout right={swipeoutBtns} backgroundColor="#140A26">
-            <TouchableOpacity onPress={() => setIsModalShown(true)}>
+            <TouchableOpacity onPress={() => setIsModalShown(item)}>
               <View style={styles.taskCardWrapper}>
                 <View style={styles.taskCard}>
                   <Image source={require(`../assets/images/unchecked.png`)} />
                   <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                    {item.task}
+                    {item.title}
                   </Text>
-                  <Text style={{fontSize: 16}}>{item.time}</Text>
+                  <Text style={{fontSize: 16}}>
+                    {moment(item.remind_date).format('MMMM Do YY, h:mm a')}
+                  </Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -53,11 +64,9 @@ const DailyView = () => {
         )}
       />
       <DetailsPage
-        isVisible={isModalShown}
-        closeModal={() => {
-          console.log('CLoing modal');
-          setIsModalShown(false);
-        }}
+        isVisible={isModalShown ? true : false}
+        data={isModalShown}
+        closeModal={() => setIsModalShown(null)}
       />
     </>
   );

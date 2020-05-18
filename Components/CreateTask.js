@@ -5,13 +5,39 @@ import moment from 'moment';
 
 import {s, vs} from 'react-native-size-matters';
 import {TextInput, TouchableOpacity} from 'react-native';
+const axios = require('axios');
 
 import DateTime from './DateTime';
 
 const CreateTask = () => {
   const [show, setShow] = useState(false);
   const [isVisibile, setVisibility] = useState(false);
+  const [title, setTitle] = useState();
+  const [description, setDescription] = useState();
+  const [date, setDate] = useState();
 
+  const createClicked = () => {
+    const _data = {
+      title,
+      description,
+      remind_date: date,
+    };
+
+    console.log(_data);
+
+    axios
+      .post('http://localhost:8080/task/new', _data)
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    setTitle(null);
+    setDescription(null);
+    setDate();
+  };
   return (
     <>
       <SafeAreaView style={{flex: 1, backgroundColor: '#140A26'}}>
@@ -41,6 +67,8 @@ const CreateTask = () => {
                       width: 282,
                       paddingVertical: vs(11),
                     }}
+                    value={title}
+                    onChangeText={setTitle}
                   />
                 </View>
               </View>
@@ -56,6 +84,8 @@ const CreateTask = () => {
                       width: 282,
                       paddingVertical: vs(11),
                     }}
+                    value={description}
+                    onChangeText={setDescription}
                   />
                 </View>
               </View>
@@ -73,21 +103,31 @@ const CreateTask = () => {
                       flexDirection: 'row',
                       paddingVertical: vs(15),
                     }}>
-                    <Text style={{fontSize: 20, marginRight: 40}}>{moment().format('DD')}</Text>
-                    <Text style={{fontSize: 20, marginRight: 40}}>{moment().format('ddd')}</Text>
+                    <Text style={{fontSize: 20, marginRight: 40}}>
+                      {moment(date).format('DD')}
+                    </Text>
+                    <Text style={{fontSize: 20, marginRight: 40}}>
+                      {moment(date).format('ddd')}
+                    </Text>
                     <Text style={{fontSize: 20, marginRight: 15}}>
-                      {moment().format('YYYY')}
+                      {moment(date).format('YYYY')}
                     </Text>
                   </View>
                 </TouchableOpacity>
-                <DateTime showDateTime={show} hide={() => setShow(false)} />
+                <DateTime
+                  showDateTime={show}
+                  hide={() => setShow(false)}
+                  onChange={setDate}
+                />
               </View>
             </View>
-            <View>
-              <View style={styles.CreateTask}>
-                <Text style={{color: 'white'}}>Create</Text>
+            <TouchableOpacity onPress={createClicked}>
+              <View>
+                <View style={styles.CreateTask}>
+                  <Text style={{color: 'white'}}>Create</Text>
+                </View>
               </View>
-            </View>
+            </TouchableOpacity>
           </View>
         </View>
       </SafeAreaView>

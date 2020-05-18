@@ -10,7 +10,8 @@ import {
 } from 'react-native';
 import {s, vs} from 'react-native-size-matters';
 
-const DetailsPage = ({isVisible, closeModal}) => {
+const DetailsPage = ({isVisible, data, closeModal}) => {
+  if (!data) return null;
   return (
     <Modal
       visible={isVisible}
@@ -71,10 +72,7 @@ const DetailsPage = ({isVisible, closeModal}) => {
                 paddingVertical: vs(15),
                 paddingHorizontal: s(23),
               }}>
-              <Text style={{fontSize: 13.5}}>
-                The monkey-rope is found in all whalers; but it was only in the
-                Pequod that the monkey and his holder.
-              </Text>
+              <Text style={{fontSize: 13.5}}>{data.description}</Text>
             </View>
             <View style={{flexDirection: 'row', paddingHorizontal: 23}}>
               <Image source={require(`../assets/images/unchecked.png`)} />

@@ -34,7 +34,7 @@ const DatePickerIos = ({showDateTime, hide, onChange}) => {
         <View style={styles.dateTimePicker}>
           <DateTimePicker
             testID="dateTimePicker"
-            timeZoneOffsetInMinutes={0}
+            // timeZoneOffsetInMinutes={0}
             mode="datetime"
             value={date}
             is24Hour={true}
@@ -84,7 +84,7 @@ const DatePickerAndroid = ({showDateTime, hide, onChange}) => {
   return (
     <DateTimePicker
       testID="dateTimePicker"
-      timeZoneOffsetInMinutes={0}
+      // timeZoneOffsetInMinutes={0}
       value={new Date()}
       mode="datetime"
       is24Hour={true}

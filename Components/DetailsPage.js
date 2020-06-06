@@ -1,5 +1,7 @@
+/* eslint-disable react-native/no-inline-styles */
 import React from 'react';
 import {BlurView} from '@react-native-community/blur';
+import moment from 'moment';
 import {
   View,
   Text,
@@ -61,7 +63,7 @@ const DetailsPage = ({isVisible, data, closeModal}) => {
                 />
                 <Text
                   style={{fontSize: 16, color: '#050505', paddingLeft: s(14)}}>
-                  3rd Feb . 6pm
+                  {moment(data.remind_date).format('MMMM Do YYYY, h:mm a')}
                 </Text>
               </View>
             </View>
@@ -81,7 +83,7 @@ const DetailsPage = ({isVisible, data, closeModal}) => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity onPress={closeModal}>
+          <TouchableOpacity onPress={closeModal} activeOpacity={0.9}>
             <View
               style={{
                 backgroundColor: '#FF5C5C',

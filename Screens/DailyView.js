@@ -24,7 +24,7 @@ const DailyView = () => {
 
   useEffect(() => {
     axios
-      .get('http://localhost:8080/tasks?today=true')
+      .get('http://localhost:8080/tasks?date=today')
       .then(function(response) {
         if (Array.isArray(response.data.tasks)) {
           setTasks(response.data.tasks);

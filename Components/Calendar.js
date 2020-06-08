@@ -2,10 +2,11 @@ import React from 'react';
 import {Calendar, CalendarList, Agenda} from 'react-native-calendars';
 import {View, Text} from 'react-native';
 import moment from 'moment';
-const CalendarComponent = () => (
+const CalendarComponent = (props) => (
   <CalendarList
     horizontal={true}
     pagingEnabled={true}
+    onDayPress={props.onDayPress}
     markedDates={{
       [new moment().format('YYYY-MM-DD')]: {
         activeOpacity: 0.9,

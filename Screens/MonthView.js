@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, {useState, useEffect} from 'react';
 import {
   SafeAreaView,
@@ -16,10 +17,11 @@ import axios from 'axios';
 import moment from 'moment';
 import Swipeout from 'react-native-swipeout';
 
-
 var swipeoutBtns = [
   {
     text: 'Button',
+    backgroundColor: 'red',
+      underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
   },
 ];
 
@@ -28,10 +30,15 @@ const CARD_WIDTH = 300;
 const MonthView = () => {
   const [isModalShown, setIsModalShown] = useState(null);
   const [tasks, setTasks] = useState([]);
+  const [selectedDate, setDate] = useState(moment().format('YYYY-MM-DD'));
 
   useEffect(() => {
+    getTasks();
+  }, [selectedDate]);
+
+  const getTasks = () => {
     axios
-      .get('http://localhost:8080/tasks?today=true')
+      .get(`http://localhost:8080/tasks?date=${selectedDate}`)
       .then(function(response) {
         if (Array.isArray(response.data.tasks)) {
           setTasks(response.data.tasks);
@@ -41,13 +48,20 @@ const MonthView = () => {
         // handle error
         console.log(error);
       });
-  }, []);
+  };
+  const onDayPress = day => {
+    // setDate(moment(day).format('MMMM Do YYYY'));
+    // console.log(moment(day).format('YYYY DD MM'));
+    setDate(day.dateString);
+    console.log(day);
+    console.log(moment().format('YYYY-MM-DD'));
+  };
   return (
     <>
       <FlatList
         ListHeaderComponent={() => (
           <>
-            <CalendarComponent />
+            <CalendarComponent onDayPress={onDayPress} />
             <View style={{alignItems: 'center'}}>
               <View style={{width: CARD_WIDTH, paddingVertical: vs(20)}}>
                 <Text
@@ -64,9 +78,8 @@ const MonthView = () => {
           let _date = moment(item.remind_date).toDate();
           _date = _date.toISOString();
           return (
-            <Swipeout right={swipeoutBtns} backgroundColor="#140A26">
-              <TouchableOpacity onPress={() => setIsModalShown(item)}>
-                <View style={styles.taskCardWrapper}>
+            <TouchableOpacity onPress={() => setIsModalShown(item)}>
+              <View style={styles.taskCardWrapper}>
                   <View style={styles.taskCard}>
                     <Image source={require(`../assets/images/unchecked.png`)} />
                     <Text style={{fontSize: 16, fontWeight: 'bold'}}>
@@ -76,9 +89,8 @@ const MonthView = () => {
                       {moment(_date).format('MMMM Do YYYY, h:mm a')}
                     </Text>
                   </View>
-                </View>
-              </TouchableOpacity>
-            </Swipeout>
+              </View>
+            </TouchableOpacity>
           );
         }}
       />
@@ -101,7 +113,7 @@ const styles = StyleSheet.create({
   },
   taskCard: {
     width: CARD_WIDTH,
-    height: 68,
+    height: 85,
     backgroundColor: '#D6D6D6',
     borderRadius: 3,
     flexDirection: 'row',

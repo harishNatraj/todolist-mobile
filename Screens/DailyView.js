@@ -72,7 +72,15 @@ const DailyView = () => {
       <DetailsPage
         isVisible={isModalShown ? true : false}
         data={isModalShown}
-        closeModal={() => setIsModalShown(null)}
+        closeModal={() => {
+          axios
+            .delete(`http://localhost:8080/task?id=${isModalShown._id}`)
+            .then(response => {
+              console.log(response);
+            })
+            .catch(err => console.log(err));
+          setIsModalShown(null);
+        }}
       />
     </>
   );

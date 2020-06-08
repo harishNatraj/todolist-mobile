@@ -21,7 +21,7 @@ var swipeoutBtns = [
   {
     text: 'Button',
     backgroundColor: 'red',
-      underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
+    underlayColor: 'rgba(0, 0, 0, 1, 0.6)',
   },
 ];
 
@@ -41,6 +41,7 @@ const MonthView = () => {
       .get(`http://localhost:8080/tasks?date=${selectedDate}`)
       .then(function(response) {
         if (Array.isArray(response.data.tasks)) {
+          console.log(response.data.tasks);
           setTasks(response.data.tasks);
         }
       })
@@ -80,24 +81,31 @@ const MonthView = () => {
           return (
             <TouchableOpacity onPress={() => setIsModalShown(item)}>
               <View style={styles.taskCardWrapper}>
-                  <View style={styles.taskCard}>
-                    <Image source={require(`../assets/images/unchecked.png`)} />
-                    <Text style={{fontSize: 16, fontWeight: 'bold'}}>
-                      {item.title}
-                    </Text>
-                    <Text style={{fontSize: 16}}>
-                      {moment(_date).format('MMMM Do YYYY, h:mm a')}
-                    </Text>
-                  </View>
+                <View style={styles.taskCard}>
+                  <Image source={require(`../assets/images/unchecked.png`)} />
+                  <Text style={{fontSize: 16, fontWeight: 'bold'}}>
+                    {item.title}
+                  </Text>
+                  <Text style={{fontSize: 16}}>
+                    {moment(_date).format('MMMM Do YYYY, h:mm a')}
+                  </Text>
+                </View>
               </View>
             </TouchableOpacity>
           );
         }}
       />
+      {console.log(isModalShown ? isModalShown._id : '')}
       <DetailsPage
         isVisible={isModalShown ? true : false}
         data={isModalShown}
         closeModal={() => {
+          axios
+            .delete(`http://localhost:8080/task?id=${isModalShown._id}`)
+            .then(response => {
+              console.log(response);
+            })
+            .catch(err => console.log(err));
           setIsModalShown(null);
         }}
       />
